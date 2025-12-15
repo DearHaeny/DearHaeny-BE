@@ -33,7 +33,7 @@ jobs:
           host: ${{ secrets.SSH_HOST }}
           key: ${{ secrets.SSH_KEY }}
           source: "build/libs/*.jar"
-          target: "/home/ubuntu/itzi/build/libs/"
+          target: "/home/ubuntu/dearHaeny/build/libs/"
 
       - name: Deploy using Docker Compose
         uses: appleboy/ssh-action@master
@@ -43,6 +43,6 @@ jobs:
           key: ${{ secrets.SSH_KEY }}
           script_stop: true
           script: |
-            cd ~/itzi || exit 1     # 경로 변경 실패 시 즉시 종료
+            cd ~/dearHaeny || exit 1     # 경로 변경 실패 시 즉시 종료
             docker compose up -d --build --no-deps spring
             docker image prune -f
