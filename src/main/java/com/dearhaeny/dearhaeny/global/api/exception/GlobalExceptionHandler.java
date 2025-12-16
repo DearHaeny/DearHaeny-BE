@@ -4,6 +4,8 @@ import com.dearhaeny.dearhaeny.global.api.code.ErrorStatus;
 import com.dearhaeny.dearhaeny.global.api.dto.ApiResponse;
 import com.dearhaeny.dearhaeny.global.api.dto.ErrorReasonDto;
 import lombok.extern.slf4j.Slf4j;
+import org.springframework.core.Ordered;
+import org.springframework.core.annotation.Order;
 import org.springframework.dao.DataIntegrityViolationException;
 import org.springframework.http.HttpHeaders;
 import org.springframework.http.HttpStatus;
@@ -19,6 +21,7 @@ import java.util.HashMap;
 import java.util.Map;
 
 @Slf4j
+@Order(Ordered.HIGHEST_PRECEDENCE)
 @RestControllerAdvice
 public class GlobalExceptionHandler extends ResponseEntityExceptionHandler {
 
