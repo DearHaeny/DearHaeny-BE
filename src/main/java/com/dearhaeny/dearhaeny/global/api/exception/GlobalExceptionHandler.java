@@ -51,7 +51,7 @@ public class GlobalExceptionHandler extends ResponseEntityExceptionHandler {
     // DB UNIQUE 위반 등 무결성 예외 처리
     @ExceptionHandler(DataIntegrityViolationException.class)
     public ResponseEntity<ApiResponse<Object>> handleDataIntegrityViolation(DataIntegrityViolationException e) {
-        log.error("[DataIntegrityViolation] {}", e.getMessage(), e);
+        log.error("[IntegrityViolation] {}", e.getMessage(), e);
 
         var reason = ErrorStatus.DUPLICATE_NICKNAME.getReasonHttpStatus();
 
@@ -68,7 +68,9 @@ public class GlobalExceptionHandler extends ResponseEntityExceptionHandler {
         log.error("[Unhandled Exception] code: {}, message: {}",
                 ErrorStatus.INTERNAL_SERVER_ERROR.getCode(), e.getMessage(), e);
 
-        return new ResponseEntity<>(ApiResponse.onFailure(ErrorStatus.INTERNAL_SERVER_ERROR.getCode(), e.getMessage(), null),
-                HttpStatus.INTERNAL_SERVER_ERROR);
+        var reason = ErrorStatus.INTERNAL_SERVER_ERROR.getReasonHttpStatus();
+
+        return new ResponseEntity<>(ApiResponse.onFailure(reason.getCode(), reason.getMessage(), null),
+                reason.getHttpStatus());
     }
 }
