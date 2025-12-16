@@ -28,6 +28,10 @@ public class PostService {
             throw new GeneralException(ErrorStatus.VALIDATION_ERROR, "닉네임을 입력해 주세요.");
         }
 
+        if (postRepository.existsByNickname(request.getNickname())) {
+            throw new GeneralException(ErrorStatus.DUPLICATE_NICKNAME);
+        }
+
         if (request.getContent() == null || request.getContent().isBlank()) {
             throw new GeneralException(ErrorStatus.VALIDATION_ERROR, "게시글을 작성해 주세요.");
         }
