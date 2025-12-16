@@ -4,6 +4,7 @@ import com.dearhaeny.dearhaeny.global.api.code.ErrorStatus;
 import com.dearhaeny.dearhaeny.global.api.dto.ApiResponse;
 import com.dearhaeny.dearhaeny.global.api.dto.ErrorReasonDto;
 import lombok.extern.slf4j.Slf4j;
+import org.springframework.dao.DataIntegrityViolationException;
 import org.springframework.http.HttpHeaders;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.HttpStatusCode;
@@ -45,6 +46,19 @@ public class GlobalExceptionHandler extends ResponseEntityExceptionHandler {
 
         return new ResponseEntity<>(ApiResponse.onFailure(ErrorStatus.VALIDATION_ERROR.getCode(), "Validation Error", errors),
                 HttpStatus.BAD_REQUEST);
+    }
+
+    // DB UNIQUE 위반 등 무결성 예외 처리
+    @ExceptionHandler(DataIntegrityViolationException.class)
+    public ResponseEntity<ApiResponse<Object>> handleDataIntegrityViolation(DataIntegrityViolationException e) {
+        log.error("[DataIntegrityViolation] {}", e.getMessage(), e);
+
+        var reason = ErrorStatus.DUPLICATE_NICKNAME.getReasonHttpStatus();
+
+        return new ResponseEntity<>(
+                ApiResponse.onFailure(reason.getCode(), reason.getMessage(), null),
+                reason.getHttpStatus()
+        );
     }
 
     // 그 외 모든 예외 처리
