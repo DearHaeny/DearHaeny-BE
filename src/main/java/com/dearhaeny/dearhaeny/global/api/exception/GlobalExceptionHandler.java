@@ -56,7 +56,13 @@ public class GlobalExceptionHandler extends ResponseEntityExceptionHandler {
     public ResponseEntity<ApiResponse<Object>> handleDataIntegrityViolation(DataIntegrityViolationException e) {
         log.error("[IntegrityViolation] {}", e.getMessage(), e);
 
-        var reason = ErrorStatus.DUPLICATE_NICKNAME.getReasonHttpStatus();
+        // 중복 응답 전송
+        if (e.getMessage() != null && e.getMessage().contains("Duplicate entry")) {
+            var reason = ErrorStatus.DUPLICATE_NICKNAME.getReasonHttpStatus();
+            return new ResponseEntity<>(ApiResponse.onFailure(reason.getCode(), reason.getMessage(), null), reason.getHttpStatus());
+        }
+
+        var reason = ErrorStatus.INTERNAL_SERVER_ERROR.getReasonHttpStatus();
 
         return new ResponseEntity<>(
                 ApiResponse.onFailure(reason.getCode(), reason.getMessage(), null),
@@ -68,11 +74,17 @@ public class GlobalExceptionHandler extends ResponseEntityExceptionHandler {
     @ExceptionHandler(Exception.class)
     public ResponseEntity<ApiResponse<Object>> handleException(Exception e) {
 
+        // DataIntegrityViolationException 혹은 중복 메시지가 포함된 경우 강제 전환
+        if ( e instanceof DataIntegrityViolationException || e.getMessage().contains("Duplicate entry")) {
+            log.warn("[Handled through fallback] Duplicate entry detected in general Exception handler");
+            var reason = ErrorStatus.DUPLICATE_NICKNAME.getReasonHttpStatus();
+            return new ResponseEntity<>(ApiResponse.onFailure(reason.getCode(), reason.getMessage(), null), reason.getHttpStatus());
+        }
+
         log.error("[Unhandled Exception] code: {}, message: {}",
                 ErrorStatus.INTERNAL_SERVER_ERROR.getCode(), e.getMessage(), e);
 
         var reason = ErrorStatus.INTERNAL_SERVER_ERROR.getReasonHttpStatus();
-
         return new ResponseEntity<>(ApiResponse.onFailure(reason.getCode(), reason.getMessage(), null),
                 reason.getHttpStatus());
     }
