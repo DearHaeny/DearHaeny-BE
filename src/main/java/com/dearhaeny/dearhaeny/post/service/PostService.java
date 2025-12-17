@@ -48,7 +48,8 @@ public class PostService {
                 .build();
 
         // 저장
-        Post savedPost = postRepository.save(post);
+        // 닉네임이 중복일 경우 DataIntegrityViolationException 발생
+        Post savedPost = postRepository.saveAndFlush(post);
 
         // responseDto 반환
         return PostCreatedResponse.builder()
