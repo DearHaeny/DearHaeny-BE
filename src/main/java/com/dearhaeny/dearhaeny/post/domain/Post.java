@@ -1,5 +1,6 @@
 package com.dearhaeny.dearhaeny.post.domain;
 
+import com.dearhaeny.dearhaeny.reply.domain.Reply;
 import jakarta.persistence.*;
 import lombok.*;
 import org.hibernate.annotations.CreationTimestamp;
@@ -32,5 +33,9 @@ public class Post {
     @CreationTimestamp
     @Column(name="createdAt", updatable = false)
     private LocalDateTime createdAt;
+
+    // Post : Reply = 1 : 1
+    @OneToOne(mappedBy = "post", cascade = CascadeType.ALL, fetch = FetchType.LAZY)
+    private Reply reply;
 
 }

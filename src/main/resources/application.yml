@@ -35,3 +35,7 @@ cloud:
       static: ap-northeast-2
     stack:
       auto: false
+
+  gemini:
+    api:
+      key: ${GEMINI_API_KEY}
