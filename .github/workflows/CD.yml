@@ -33,7 +33,7 @@ jobs:
           host: ${{ secrets.SSH_HOST }}
           key: ${{ secrets.SSH_KEY }}
           source: "build/libs/*.jar"
-          target: "/home/ubuntu/dearHaeny"
+          target: "/home/ubuntu/dearHaeny/build/libs"
           strip_components: 2  # 빌드 시 생성된 'build/libs' 경로를 제거하고 파일만 전송
 
       - name: Deploy using Docker Compose
