@@ -2,6 +2,7 @@ package com.dearhaeny.dearhaeny.post.query.service;
 
 import com.dearhaeny.dearhaeny.post.domain.Post;
 import com.dearhaeny.dearhaeny.post.domain.PostType;
+import com.dearhaeny.dearhaeny.post.query.dto.PostDetailResponse;
 import com.dearhaeny.dearhaeny.post.query.dto.PostListResponse;
 import com.dearhaeny.dearhaeny.post.query.dto.PostListResultResponse;
 import com.dearhaeny.dearhaeny.post.repository.PostRepository;
@@ -53,6 +54,12 @@ public class PostQueryService {
                 postPage.hasNext(),            // ⭐ 무한 스크롤 핵심
                 posts
         );
+    }
+    public PostDetailResponse getPostDetail(Long postId) {
+        Post post = postRepository.findById(postId)
+                .orElseThrow(() -> new IllegalArgumentException("게시글이 존재하지 않습니다."));
+
+        return PostDetailResponse.from(post);
     }
 }
 

@@ -1,6 +1,7 @@
 package com.dearhaeny.dearhaeny.post.query.controller;
 
 import com.dearhaeny.dearhaeny.post.domain.PostType;
+import com.dearhaeny.dearhaeny.post.query.dto.PostDetailResponse;
 import com.dearhaeny.dearhaeny.post.query.dto.PostListResultResponse;
 import com.dearhaeny.dearhaeny.post.query.service.PostQueryService;
 import lombok.RequiredArgsConstructor;
@@ -21,4 +22,12 @@ public class PostQueryController {
     ) {
         return postQueryService.getPostList(category, page, size);
     }
+    @GetMapping("/{postId}")
+    public PostDetailResponse getPostDetail(
+            @PathVariable Long postId
+    ) {
+        return postQueryService.getPostDetail(postId);
+    }
+
+
 }
