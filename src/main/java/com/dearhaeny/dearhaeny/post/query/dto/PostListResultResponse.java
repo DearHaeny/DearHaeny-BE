@@ -3,6 +3,7 @@ package com.dearhaeny.dearhaeny.post.query.dto;
 import java.util.List;
 
 public record PostListResultResponse(
+        String writerUuid,          // 브라우저 식별자
         String selectedType,   // ALL / NEW_YEAR_WISH / INNER_THOUGHT / COURAGE
         long totalCount,
         int page,

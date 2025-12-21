@@ -6,6 +6,7 @@ import lombok.*;
 import org.hibernate.annotations.CreationTimestamp;
 
 import java.time.LocalDateTime;
+import java.util.UUID;
 
 @Entity
 @Getter
@@ -19,6 +20,9 @@ public class Post {
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     @Column(name="post_id",nullable = false, unique = true)
     private Long postId;
+
+    @Column(name="writer_uuid", nullable = false)
+    private String writerUuid;          // 작성자 식별
 
     @Column(name="nickname", nullable = false, unique = true)
     private String nickname;

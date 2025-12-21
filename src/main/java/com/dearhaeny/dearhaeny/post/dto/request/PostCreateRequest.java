@@ -8,6 +8,7 @@ import lombok.Setter;
 @Setter
 public class PostCreateRequest {
 
+    private String writerUuid;
     private String nickname;
     private PostType postType;
     private String content;
