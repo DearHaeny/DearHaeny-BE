@@ -1,12 +1,12 @@
 package com.dearhaeny.dearhaeny.post.controller;
 
 import com.dearhaeny.dearhaeny.global.api.dto.ApiResponse;
-import com.dearhaeny.dearhaeny.post.domain.Post;
 import com.dearhaeny.dearhaeny.post.dto.request.PostCreateRequest;
 import com.dearhaeny.dearhaeny.post.dto.response.PostCreatedResponse;
 import com.dearhaeny.dearhaeny.post.service.PostService;
 import com.dearhaeny.dearhaeny.reply.dto.response.ReplyCreatedResponse;
 import com.dearhaeny.dearhaeny.reply.service.ReplyService;
+import jakarta.servlet.http.HttpServletRequest;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.web.bind.annotation.*;
@@ -22,9 +22,14 @@ public class PostController {
 
     @PostMapping
     public ApiResponse<PostCreatedResponse> postCreate(
-            @RequestBody PostCreateRequest request
+            HttpServletRequest request,
+            @RequestBody PostCreateRequest postCreateRequest
     ) {
-        PostCreatedResponse response = postService.sendPost(request);
+
+        // 인터셉터에서 설정한 anonId 꺼내기
+        String anonId = (String) request.getAttribute("anonId");
+
+        PostCreatedResponse response = postService.sendPost(postCreateRequest, anonId);
         return ApiResponse.success(response);
     }
 

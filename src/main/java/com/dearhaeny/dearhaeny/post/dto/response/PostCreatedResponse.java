@@ -15,6 +15,7 @@ public class PostCreatedResponse {
 
     private Long postId;
     private PostType postType;
+    private String writerUuid;
 
     @JsonFormat(shape=JsonFormat.Shape.STRING, pattern = "yyyy-MM-dd'T'HH:mm:ss'Z'", timezone = "Asia/Seoul")
     private LocalDateTime createdAt;

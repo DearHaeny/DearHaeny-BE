@@ -8,8 +8,10 @@ import org.springframework.data.jpa.repository.JpaRepository;
 
 public interface PostRepository extends JpaRepository<Post, Long> {
 
-    boolean existsByNickname(String nickname);
+    boolean existsByNicknameAndWriterUuid(String nickname, String writerUuid);
 
-    Page<Post> findAllByPostType(PostType postType, Pageable pageable);
+    // 목록 조회
+    Page<Post> findAllByWriterUuid(String writerUuid, Pageable pageable);
+    Page<Post> findAllByWriterUuidAndPostType(String writerUuid, PostType postType, Pageable pageable);
     
 }
