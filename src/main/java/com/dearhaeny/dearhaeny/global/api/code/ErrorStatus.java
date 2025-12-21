@@ -17,6 +17,7 @@ public enum ErrorStatus implements BaseErrorCode{
     POST_NOT_FOUND(HttpStatus.NOT_FOUND, "E-404-01", "해당 마음 게시글을 찾을 수 없습니다."),
     DUPLICATE_NICKNAME(HttpStatus.CONFLICT, "E-409-01", "이미 사용 중인 닉네임입니다."),
     REPLY_ALREADY_EXIST(HttpStatus.CONFLICT, "E-409-02", "이미 해당 마음 글에 대한 답장이 생성되어 있습니다."),
+    REPLY_NOT_FOUND(HttpStatus.NOT_FOUND, "E-404-02", "해당 마음 글에 대한 답장이 존재하지 않습니다."),
 
     // GEMINI
     GEMINI_BLOCKED(HttpStatus.BAD_REQUEST, "E-400-03", "Gemini 응답이 정책에 인해 차단되었습니다."),

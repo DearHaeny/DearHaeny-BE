@@ -148,4 +148,18 @@ public class ReplyService {
         }
     }
 
+    @Transactional
+    public ReplyCreatedResponse getReplyByPostId(Long postId) {
+
+        Reply reply = replyRepository.findByPost_PostId(postId)
+                .orElseThrow(() -> new GeneralException(ErrorStatus.REPLY_NOT_FOUND));
+
+        return ReplyCreatedResponse.builder()
+                .replyId(reply.getReplyId())
+                .content(reply.getContent())
+                .replyStatus(reply.getStatus())
+                .createdAt(reply.getCreatedAt())
+                .build();
+    }
+
 }
