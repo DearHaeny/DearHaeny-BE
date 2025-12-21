@@ -11,6 +11,8 @@ import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.stereotype.Service;
 
+import java.util.UUID;
+
 @Service
 @Slf4j
 @RequiredArgsConstructor
@@ -20,14 +22,15 @@ public class PostService {
 
     // 마음 글 작성하기
     @Transactional
-    public PostCreatedResponse sendPost(PostCreateRequest request) {
+    public PostCreatedResponse sendPost(PostCreateRequest request, String writerUuid) {
 
         // 게시글을 작성하기 위해서는 모든 필드가 작성돼 있어야 한다
         if (request.getNickname() == null || request.getNickname().isBlank()) {
             throw new GeneralException(ErrorStatus.VALIDATION_ERROR, "닉네임을 입력해 주세요.");
         }
 
-        if (postRepository.existsByNickname(request.getNickname())) {
+        // 사용하는 브라우저 내에서만 닉네임 중복을 검증
+        if (postRepository.existsByNicknameAndWriterUuid(request.getNickname(), writerUuid)) {
             throw new GeneralException(ErrorStatus.DUPLICATE_NICKNAME);
         }
 
@@ -42,6 +45,7 @@ public class PostService {
         try {
             // Post 엔티티 생성
             Post post = Post.builder()
+                    .writerUuid(writerUuid)
                     .nickname(request.getNickname())
                     .postType(request.getPostType())
                     .content(request.getContent())
@@ -55,6 +59,7 @@ public class PostService {
             return PostCreatedResponse.builder()
                     .postId(savedPost.getPostId())
                     .postType(savedPost.getPostType())
+                    .writerUuid(savedPost.getWriterUuid())
                     .createdAt(post.getCreatedAt())
                     .build();
         } catch (Exception e) {

@@ -21,6 +21,7 @@ public class PostQueryService {
     private final PostRepository postRepository;
 
     public PostListResultResponse getPostList(
+            String writerUuid,
             PostType postType,
             int page,
             int size
@@ -35,11 +36,11 @@ public class PostQueryService {
 
         // ✅ 전체 조회
         if (postType == null) {
-            postPage = postRepository.findAll(pageable);
+            postPage = postRepository.findAllByWriterUuid(writerUuid, pageable);
         } 
         // ✅ 카테고리 필터
         else {
-            postPage = postRepository.findAllByPostType(postType, pageable);
+            postPage = postRepository.findAllByWriterUuidAndPostType(writerUuid, postType, pageable);
         }
 
         List<PostListResponse> posts = postPage.getContent().stream()
@@ -47,6 +48,7 @@ public class PostQueryService {
                 .toList();
 
         return new PostListResultResponse(
+                writerUuid,
                 postType == null ? "ALL" : postType.name(),
                 postPage.getTotalElements(),   // ⭐ 결과 요약 count
                 postPage.getNumber(),
