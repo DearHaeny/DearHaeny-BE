@@ -156,12 +156,18 @@ public class ReplyService {
     }
 
     @Transactional
-    public ReplyCreatedResponse getReplyByPostId(Long postId) {
+    public ReplyCreatedResponse getReplyByPostId(Long postId, String writerUuid) {
 
         Reply reply = replyRepository.findByPost_PostId(postId)
                 .orElseThrow(() -> new GeneralException(ErrorStatus.REPLY_NOT_FOUND));
 
+        // 작성자 본인 확인
+        if (!reply.getPost().getWriterUuid().equals(writerUuid)) {
+            throw new GeneralException(ErrorStatus.INVALID_WRITER, "본인이 작성한 글에 대해서만 게시물을 조회할 수 있습니다.");
+        }
+
         return ReplyCreatedResponse.builder()
+                .writerUuid(reply.getPost().getWriterUuid())
                 .replyId(reply.getReplyId())
                 .content(reply.getContent())
                 .replyStatus(reply.getStatus())
