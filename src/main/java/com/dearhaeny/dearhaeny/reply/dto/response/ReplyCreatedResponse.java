@@ -15,6 +15,7 @@ import java.time.LocalDateTime;
 @Builder
 public class ReplyCreatedResponse {
 
+    private String writerUuid;
     private Long replyId;
     private String content;
     private ReplyStatus replyStatus;

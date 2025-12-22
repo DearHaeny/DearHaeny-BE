@@ -35,8 +35,11 @@ public class PostController {
 
     @PostMapping("/{postId}/reply")
     public ApiResponse<ReplyCreatedResponse> replyCreate(
+            HttpServletRequest request,
             @PathVariable Long postId
     ) {
-        return ApiResponse.success(replyService.createReply(postId));
+
+        String anonId = (String) request.getAttribute("anonId");
+        return ApiResponse.success(replyService.createReply(postId, anonId));
     }
 }
