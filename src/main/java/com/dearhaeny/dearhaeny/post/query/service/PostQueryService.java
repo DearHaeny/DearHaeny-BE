@@ -1,5 +1,7 @@
 package com.dearhaeny.dearhaeny.post.query.service;
 
+import com.dearhaeny.dearhaeny.global.api.code.ErrorStatus;
+import com.dearhaeny.dearhaeny.global.api.exception.GeneralException;
 import com.dearhaeny.dearhaeny.post.domain.Post;
 import com.dearhaeny.dearhaeny.post.domain.PostType;
 import com.dearhaeny.dearhaeny.post.query.dto.PostDetailResponse;
@@ -57,9 +59,14 @@ public class PostQueryService {
                 posts
         );
     }
-    public PostDetailResponse getPostDetail(Long postId) {
+    public PostDetailResponse getPostDetail(Long postId, String writerUuid) {
         Post post = postRepository.findById(postId)
                 .orElseThrow(() -> new IllegalArgumentException("게시글이 존재하지 않습니다."));
+
+        // 작성자 본인 확인
+        if (!post.getWriterUuid().equals(writerUuid)) {
+            throw new GeneralException(ErrorStatus.INVALID_WRITER, "본인이 작성한 글에 대해서만 게시물을 조회할 수 있습니다.");
+        }
 
         return PostDetailResponse.from(post);
     }

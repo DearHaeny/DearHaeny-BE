@@ -13,6 +13,7 @@ public enum ErrorStatus implements BaseErrorCode{
     _BAD_REQUEST(HttpStatus.BAD_REQUEST, "E-400-01", "잘못된 요청입니다."),
     VALIDATION_ERROR(HttpStatus.BAD_REQUEST, "E-400-02", "요청 값이 올바르지 않습니다."),
     REQUIRED_FIELD_MISSING(HttpStatus.BAD_REQUEST,"E-400-03", "필수 입력 항목이 누락되었습니다."),
+    INVALID_WRITER(HttpStatus.FORBIDDEN, "E-403-01", "본인이 작성한 글에 대해서만 권한이 있습니다."),
     NOT_FOUND(HttpStatus.NOT_FOUND, "E-404", "대상을 찾을 수 없습니다."),
     POST_NOT_FOUND(HttpStatus.NOT_FOUND, "E-404-01", "해당 마음 게시글을 찾을 수 없습니다."),
     DUPLICATE_NICKNAME(HttpStatus.CONFLICT, "E-409-01", "이미 사용 중인 닉네임입니다."),

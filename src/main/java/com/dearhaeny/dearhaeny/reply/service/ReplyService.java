@@ -30,11 +30,17 @@ public class ReplyService {
 
     // postId를 기반으로 Reply를 생성한다.
     @Transactional
-    public ReplyCreatedResponse createReply(Long postId) {
+    public ReplyCreatedResponse createReply(Long postId, String writerUuid) {
 
         // post(마음 게시글) 존재 확인
         Post post = postRepository.findById(postId)
                 .orElseThrow(() -> new GeneralException(ErrorStatus.POST_NOT_FOUND));
+
+        // 작성자 본인 확인 (브라우저 식별자 비교)
+        // 본인이 작성한 게시글에 대해서만 AI 답장을 생성할 수 있다
+        if (!post.getWriterUuid().equals(writerUuid)) {
+            throw new GeneralException(ErrorStatus.INVALID_WRITER, "본인이 작성한 글에 대해서만 답장을 생성할 수 있습니다.");
+        }
 
         // Post–Reply는 1:1 관계
         // → 이미 생성된 reply가 있으면 재생성하지 않고 그대로 반환
@@ -86,6 +92,7 @@ public class ReplyService {
 
     private ReplyCreatedResponse toResponse(Reply reply) {
         return ReplyCreatedResponse.builder()
+                .writerUuid(reply.getPost().getWriterUuid())
                 .replyId(reply.getReplyId())
                 .content(reply.getContent())
                 .replyStatus(reply.getStatus())
@@ -149,12 +156,18 @@ public class ReplyService {
     }
 
     @Transactional
-    public ReplyCreatedResponse getReplyByPostId(Long postId) {
+    public ReplyCreatedResponse getReplyByPostId(Long postId, String writerUuid) {
 
         Reply reply = replyRepository.findByPost_PostId(postId)
                 .orElseThrow(() -> new GeneralException(ErrorStatus.REPLY_NOT_FOUND));
 
+        // 작성자 본인 확인
+        if (!reply.getPost().getWriterUuid().equals(writerUuid)) {
+            throw new GeneralException(ErrorStatus.INVALID_WRITER, "본인이 작성한 글에 대해서만 게시물을 조회할 수 있습니다.");
+        }
+
         return ReplyCreatedResponse.builder()
+                .writerUuid(reply.getPost().getWriterUuid())
                 .replyId(reply.getReplyId())
                 .content(reply.getContent())
                 .replyStatus(reply.getStatus())
