@@ -18,6 +18,8 @@ public class SecurityConfig {
         http
                 .csrf(csrf -> csrf.disable())           // Postman에서 POST 테스트를 위해 비활성화
                 .cors(Customizer.withDefaults())
+                .formLogin(form -> form.disable()) // 폼 로그인 비활성화
+                .httpBasic(basic -> basic.disable()) // 기본 인증 비활성화
                 .sessionManagement(sm -> sm.sessionCreationPolicy(SessionCreationPolicy.STATELESS))
                 .authorizeHttpRequests(auth -> auth
                         .requestMatchers(HttpMethod.OPTIONS, "/**").permitAll()
