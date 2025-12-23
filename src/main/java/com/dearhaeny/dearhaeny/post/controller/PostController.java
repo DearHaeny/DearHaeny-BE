@@ -35,11 +35,11 @@ public class PostController {
 
     @PostMapping("/{postId}/reply")
     public ApiResponse<ReplyCreatedResponse> replyCreate(
-            HttpServletRequest request,
+            @RequestHeader("anonId") String anonId,
             @PathVariable Long postId
     ) {
 
-        String anonId = (String) request.getAttribute("anonId");
+        log.info("요청받은 anonId: {}, postId: {}", anonId, postId);
         return ApiResponse.success(replyService.createReply(postId, anonId));
     }
 }
