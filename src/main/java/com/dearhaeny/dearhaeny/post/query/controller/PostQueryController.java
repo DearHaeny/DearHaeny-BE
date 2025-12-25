@@ -30,12 +30,10 @@ public class PostQueryController {
     }
     @GetMapping("/{postId}")
     public PostDetailResponse getPostDetail(
-            HttpServletRequest request,
+            @RequestHeader("anonId") String writerUuid,
             @PathVariable Long postId
     ) {
 
-        // uuid 추출
-        String writerUuid = (String) request.getAttribute("anonId");
         return postQueryService.getPostDetail(postId, writerUuid);
     }
 

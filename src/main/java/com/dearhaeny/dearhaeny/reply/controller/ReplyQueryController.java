@@ -15,12 +15,10 @@ public class ReplyQueryController {
 
     @GetMapping("/{postId}/reply")
     public ReplyCreatedResponse getReply(
-            HttpServletRequest request,
+            @RequestHeader("anonId") String writerUuid,
             @PathVariable Long postId
     ) {
 
-        // uuid 추출
-        String writerUuid = (String) request.getAttribute("anonId");
         return replyService.getReplyByPostId(postId, writerUuid);
     }
 }
