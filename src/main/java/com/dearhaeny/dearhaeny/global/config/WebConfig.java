@@ -31,6 +31,7 @@ public class WebConfig implements WebMvcConfigurer {
                         frontOrigin) // 프론트 배포 주소
                 .allowedMethods("GET", "POST", "PUT", "DELETE", "PATCH", "OPTIONS")
                 .allowedHeaders("*") // 모든 헤더 허용 (Anonid 포함)
+                .exposedHeaders("anonId")
                 .allowCredentials(true) // 쿠키/인증 정보 포함 허용
                 .maxAge(3600);
     }
