@@ -17,14 +17,11 @@ public class PostQueryController {
 
     @GetMapping
     public PostListResultResponse getPosts(
-            HttpServletRequest request,                         // 인터셉터에서 넘겨준 anonId를 받기 위함
+            @RequestHeader("anonId") String writerUuid,                 // 인터셉터에서 넘겨준 anonId를 받기 위함
             @RequestParam(required = false) PostType category, // 전체면 null
             @RequestParam(defaultValue = "0") int page,
             @RequestParam(defaultValue = "10") int size
     ) {
-
-        // uuid 꺼내기
-        String writerUuid = (String) request.getAttribute("anonId");
 
         return postQueryService.getPostList(writerUuid, category, page, size);
     }
