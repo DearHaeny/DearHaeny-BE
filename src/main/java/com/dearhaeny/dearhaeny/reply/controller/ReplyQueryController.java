@@ -15,10 +15,9 @@ public class ReplyQueryController {
 
     @GetMapping("/{postId}/reply")
     public ReplyCreatedResponse getReply(
-            @RequestHeader("anonId") String writerUuid,
             @PathVariable Long postId
     ) {
 
-        return replyService.getReplyByPostId(postId, writerUuid);
+        return replyService.getReplyByPostId(postId);
     }
 }
