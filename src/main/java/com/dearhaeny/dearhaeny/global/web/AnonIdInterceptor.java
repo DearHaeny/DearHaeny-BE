@@ -3,6 +3,7 @@ package com.dearhaeny.dearhaeny.global.web;
 import jakarta.servlet.http.Cookie;
 import jakarta.servlet.http.HttpServletRequest;
 import jakarta.servlet.http.HttpServletResponse;
+import org.springframework.http.HttpMethod;
 import org.springframework.stereotype.Component;
 import org.springframework.web.servlet.HandlerInterceptor;
 
@@ -13,6 +14,11 @@ public class AnonIdInterceptor implements HandlerInterceptor {
 
     @Override
     public boolean preHandle(HttpServletRequest request, HttpServletResponse response, Object handler) {
+
+        // CORS 프리플라이트(OPTIONS) 요청은 무조건 통과
+        if (HttpMethod.OPTIONS.matches(request.getMethod())) {
+            return true;
+        }
 
         // 요청 헤더에서 anonId를 찾기
         String anonId = request.getHeader("anonId");

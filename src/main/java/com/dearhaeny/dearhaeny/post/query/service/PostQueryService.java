@@ -38,11 +38,11 @@ public class PostQueryService {
 
         // ✅ 전체 조회
         if (postType == null) {
-            postPage = postRepository.findAllByWriterUuid(writerUuid, pageable);
+            postPage = postRepository.findAll(pageable);
         } 
         // ✅ 카테고리 필터
         else {
-            postPage = postRepository.findAllByWriterUuidAndPostType(writerUuid, postType, pageable);
+            postPage = postRepository.findAllByPostType(postType, pageable);
         }
 
         List<PostListResponse> posts = postPage.getContent().stream()
@@ -50,7 +50,6 @@ public class PostQueryService {
                 .toList();
 
         return new PostListResultResponse(
-                writerUuid,
                 postType == null ? "ALL" : postType.name(),
                 postPage.getTotalElements(),   // ⭐ 결과 요약 count
                 postPage.getNumber(),
@@ -59,14 +58,9 @@ public class PostQueryService {
                 posts
         );
     }
-    public PostDetailResponse getPostDetail(Long postId, String writerUuid) {
+    public PostDetailResponse getPostDetail(String writerUuid, Long postId) {
         Post post = postRepository.findById(postId)
                 .orElseThrow(() -> new IllegalArgumentException("게시글이 존재하지 않습니다."));
-
-        // 작성자 본인 확인
-        if (!post.getWriterUuid().equals(writerUuid)) {
-            throw new GeneralException(ErrorStatus.INVALID_WRITER, "본인이 작성한 글에 대해서만 게시물을 조회할 수 있습니다.");
-        }
 
         return PostDetailResponse.from(post);
     }

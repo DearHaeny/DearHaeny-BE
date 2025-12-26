@@ -13,5 +13,7 @@ public interface PostRepository extends JpaRepository<Post, Long> {
     // 목록 조회
     Page<Post> findAllByWriterUuid(String writerUuid, Pageable pageable);
     Page<Post> findAllByWriterUuidAndPostType(String writerUuid, PostType postType, Pageable pageable);
-    
+    Page<Post> findAllByPostType(PostType postType, Pageable pageable);
+
+
 }

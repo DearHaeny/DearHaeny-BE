@@ -24,6 +24,12 @@ public class PostService {
     @Transactional
     public PostCreatedResponse sendPost(PostCreateRequest request, String writerUuid) {
 
+        // 인터셉터에서 전달된 ID가 null이라면 직접 생성
+        if (writerUuid == null || writerUuid.isBlank()) {
+            log.warn("writerUuid가 없습니다.");
+            writerUuid = UUID.randomUUID().toString();
+        }
+
         // 게시글을 작성하기 위해서는 모든 필드가 작성돼 있어야 한다
         if (request.getNickname() == null || request.getNickname().isBlank()) {
             throw new GeneralException(ErrorStatus.VALIDATION_ERROR, "닉네임을 입력해 주세요.");

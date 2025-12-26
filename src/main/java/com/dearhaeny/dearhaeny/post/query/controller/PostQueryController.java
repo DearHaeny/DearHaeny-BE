@@ -17,7 +17,7 @@ public class PostQueryController {
 
     @GetMapping
     public PostListResultResponse getPosts(
-            @RequestHeader("anonId") String writerUuid,                 // 인터셉터에서 넘겨준 anonId를 받기 위함
+            @RequestHeader(value = "anonId", required = false) String writerUuid,
             @RequestParam(required = false) PostType category, // 전체면 null
             @RequestParam(defaultValue = "0") int page,
             @RequestParam(defaultValue = "10") int size
@@ -27,11 +27,11 @@ public class PostQueryController {
     }
     @GetMapping("/{postId}")
     public PostDetailResponse getPostDetail(
-            @RequestHeader("anonId") String writerUuid,
+            @RequestHeader(value = "anonId", required = false) String writerUuid,
             @PathVariable Long postId
     ) {
 
-        return postQueryService.getPostDetail(postId, writerUuid);
+        return postQueryService.getPostDetail(writerUuid, postId);
     }
 
 }
