@@ -22,39 +22,29 @@ public class PostQueryService {
 
     private final PostRepository postRepository;
 
-    public PostListResultResponse getPostList(
-            String writerUuid,
-            PostType postType,
-            int page,
-            int size
-    ) {
-        Pageable pageable = PageRequest.of(
-                page,
-                size,
-                Sort.by(Sort.Direction.DESC, "createdAt")
-        );
+    public PostListResultResponse getPostList(PostType postType) {
 
-        Page<Post> postPage;
+        // 최신순 정렬
+        Sort sort = Sort.by(Sort.Direction.DESC, "createdAt");
+
+        List<Post> postList;
 
         // ✅ 전체 조회
         if (postType == null) {
-            postPage = postRepository.findAll(pageable);
+            postList = postRepository.findAll(sort);
         } 
         // ✅ 카테고리 필터
         else {
-            postPage = postRepository.findAllByPostType(postType, pageable);
+            postList = postRepository.findAllByPostType(postType, sort);
         }
 
-        List<PostListResponse> posts = postPage.getContent().stream()
+        List<PostListResponse> posts = postList.stream()
                 .map(PostListResponse::from)
                 .toList();
 
         return new PostListResultResponse(
                 postType == null ? "ALL" : postType.name(),
-                postPage.getTotalElements(),   // ⭐ 결과 요약 count
-                postPage.getNumber(),
-                postPage.getSize(),
-                postPage.hasNext(),            // ⭐ 무한 스크롤 핵심
+                (long) posts.size(),            // 전체 개수
                 posts
         );
     }

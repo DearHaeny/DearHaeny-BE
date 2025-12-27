@@ -23,7 +23,7 @@ public class PostQueryController {
             @RequestParam(defaultValue = "10") int size
     ) {
 
-        return postQueryService.getPostList(writerUuid, category, page, size);
+        return postQueryService.getPostList(category);
     }
     @GetMapping("/{postId}")
     public PostDetailResponse getPostDetail(
